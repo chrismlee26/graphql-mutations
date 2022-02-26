@@ -30,6 +30,7 @@ type Query {
 type Mutation {
   addPet(name: String!, species: String!): Pet!
   updatePet(id: Int!, name: String, species: String): Pet
+  deletePet(id: Int!): Pet
 }
 
 `)
@@ -57,6 +58,15 @@ const root = {
     pet.species = species || pet.species
     return pet
   },
+  deletePet: ({ id }) => {
+    const pet = petList[id]
+    if (pet === undefined) {
+      return null
+    }
+    petList.splice(id, 1)
+    return petList
+  },
+
   getBike: ({ id }) => {
     return bikesList[id]
   },
