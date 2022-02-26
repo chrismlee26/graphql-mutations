@@ -1,6 +1,7 @@
 # GraphQL + Express
 
-- FEW2.9 Assignment #2: Collections
+- FEW2.9 Assignment #6: Mutations
+- Build on top of Assignment #2: Collections
 - GraphQL, Express, Nodemon
 
 #### Dependencies:

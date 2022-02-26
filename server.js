@@ -5,43 +5,7 @@ const { buildSchema } = require('graphql')
 
 // Schemas
 const schema = buildSchema(`
-type Query {
-  getAbout: About
-  getMeal(time: MealType!): Meal
-  getPet(id: Int!): Pet
-  allPets: [Pet!]!
-  getBike(id: Int!): Bike
-  allBikes: [Bike!]!
-  getTime: [Time!]!
-  getRandom(range: Int!): Random
-}
 
-type About {
-  message: String!
-}
-
-type Meal {
-  description: String!
-}
-
-enum MealType {
-  breakfast
-  lunch 
-  dinner
-}
-
-enum DietType {
-  ominvore
-  paleo
-  vegitarian
-  vegan
-  insectivore
-}
-
-type Recipe {
-  mealType: MealType!
-  dietType: DietType!
-}
 
 type Pet {
   name: String!
@@ -56,44 +20,48 @@ type Bike {
   hp: Float!
 }
 
-type Time {
-  hour: Int!
-  minute: Int!
-  second: Int!
+type Query {
+  getPet(id: Int!): Pet
+  allPets: [Pet!]!
+  getBike(id: Int!): Bike
+  allBikes: [Bike!]!
 }
 
-type Random {
-  range: Int!
+type Mutation {
+  addPet(name: String!, species: String!): Pet!
+  updatePet(id: Int!, name: String, species: String): Pet
 }
+
 `)
 
 // Resolvers
 const root = {
-  getAbout: () => {
-    return { message: 'Hello World' }
-  },
-  getMeal: ({ time }) => {
-    const allMeals = { breakfast: 'toast', lunch: 'noodles', dinner: 'pizza' }
-    const meal = allMeals[time]
-    return { description: meal }
-  },
   getPet: ({ id }) => {
     return petList[id]
   },
   allPets: () => {
     return petList
   },
+  addPet: ({ name, species }) => {
+    const pet = { name, species }
+    petList.push(pet)
+    return pet
+  },
+  updatePet: ({ id, name, species }) => {
+    const pet = petList[id]  // is there anything at this id? 
+    if (pet === undefined) { // Id not return null
+      return null
+    }
+    // if name or species was not included use the original
+    pet.name = name || pet.name
+    pet.species = species || pet.species
+    return pet
+  },
   getBike: ({ id }) => {
     return bikesList[id]
   },
   allBikes: () => {
     return BikesList
-  },
-  getTime: () => {
-    return { hours, minutes, seconds }
-  },
-  getRandom: ({ range }) => {
-    return Math.floor(Math.random() * range)
   },
 }
 
